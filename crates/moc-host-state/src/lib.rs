@@ -1,0 +1,25 @@
+//! Parity rules with the TypeScript probe (src/probe/):
+//! - stdout is JSON.stringify(output) + "\n": key order of the TS object literal in
+//!   runProbe, numbers via js::format_number, strings via serde_json.
+//! - Text that can reach idleReason is byte-identical to the TS text, including Bun spawn
+//!   errors (js::spawn_error) and Node errno names (js::errno_name).
+//! - Numbers are f64 as in JS; Number(text) is js::js_number, Math.round is js::js_round,
+//!   trim and \s use js::JS_WS. Regexes use [0-9] and js::JS_WS_CLASS, never \d or \s.
+//! - Directory listings keep read_dir order, never sorted (Bun readdirSync order).
+//! - Failures that only reach stderr need the same exit code, not the same text.
+//! - argv drops one leading `--` (Bun runtime).
+//! - Documented divergences: JSON input with unpaired surrogate escapes, numbers that overflow f64, or nesting of 128 levels or more (the top-level value counts as one) is rejected (exit 1) where the TypeScript loader may accept it; the probe's config, host and facts files never contain them. cpu.cores counts the cpuN lines of /proc/stat; Bun counts online CPUs (sysconf), which differs only when /proc/stat is virtualised (for example lxcfs). The local models query has no TLS (https:// reports unreachable), ignores http_proxy/HTTP_PROXY, parses the base URL as an HTTP URI rather than a WHATWG URL (no whitespace trimming, backslash or dot-segment normalisation, or percent-encoding; userinfo is sent as Basic auth), does not percent-encode a redirect Location (a space or non-ASCII byte in it reports unreachable), and reports unreachable for a body of 10 MiB or more, a response with more than 128 header fields or a header section over 64 KiB, or a body in the JSON class above; system_profiler output in that class, or with a non-array SPDisplaysDataType or a non-string sppci_model, exits 1. The fleet localModelsBaseUrl is "".
+//! - For stderr-only text, the key named when several keys fail may differ.
+
+pub mod config;
+pub mod facts;
+pub mod idle_rule;
+pub mod js;
+pub mod linux;
+pub mod local_models;
+pub mod macos;
+pub mod output;
+pub mod platform;
+pub mod probe;
+pub mod proc;
+pub mod time;

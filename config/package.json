@@ -1,0 +1,6 @@
+{
+  "id": "moc.host-state",
+  "version": "0.6.0",
+  "sourceDigest": "sha256:b9ded8f68658e30e0b97c1297598fc6147164e08006cc97e7d2de4c7907274d7",
+  "command": "host-state"
+}

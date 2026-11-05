@@ -1,0 +1,17 @@
+{
+  "name": "plugin-host-state",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "plugin:build": "bun run scripts/host-state-build.ts",
+    "plugin:digest": "bun run scripts/host-state-digest.ts",
+    "contract:check": "bun run scripts/host-capacity-check.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.4"
+  }
+}
